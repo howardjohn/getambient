@@ -45,6 +45,9 @@ import sys
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
+def readfile(file_path):
+    with open(file_path, 'r') as file:
+        return file.read()
 def mkcli(content, **kwargs):
     name = kwargs["name"]
     flags = kwargs.get("flags", [])
@@ -103,7 +106,7 @@ Options:\\n"
     set_defaults=""
     for o in flags:
         if o.default != "":
-            set_defaults+=f'[[ ${o.var()} == "" ]] && {{ {o.var()}={o.default}; }}\n'
+            set_defaults+=f'[[ ${{{o.var()}:-}} == "" ]] && {{ {o.var()}={o.default}; }}\n'
     core = f'''
 {help}
 die()
@@ -112,9 +115,9 @@ die()
 	echo "$1" >&2
 	return 1
 }}
+_positionals=()
 parse_commandline() {{
 	_positionals_count=0
-    _positionals=()
 	while test $# -gt 0
 	do
 		_key="$1"
@@ -151,7 +154,7 @@ fi
 if [[ $ret != 0 ]]; then
     return $ret
 fi
-set -- $_positionals
+set -- "${{_positionals[@]}}"
 {content}
 }}
 {name} "$@"
@@ -205,7 +208,7 @@ _{name}
         f.write(s)
     # make_executable(bp)
     # The original file gets nothing
-    return ""
+    return s
 
 
 def render(fname, variables):
@@ -214,6 +217,7 @@ def render(fname, variables):
     try:
         tmpl = env.get_template(fname)
         tmpl.globals["mkcli"] = mkcli
+        tmpl.globals["readfile"] = readfile
         tmpl.globals["Flag"] = Flag
         return tmpl.render(variables)
     except Exception as exec:

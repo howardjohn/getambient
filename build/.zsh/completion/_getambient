@@ -6,6 +6,13 @@ _getambient() {
     local -a args
 
     args+=(
+"($I --no-kiali)"--no-kiali'[disable Kiali]'
+"($I --no-prometheus)"--no-prometheus'[disable Prometheus]'
+"($I --no-grafana)"--no-grafana'[do not deploy Grafana]'
+"($I --no-metallb)"--no-metallb'[disable MetalLB]'
+"($I --no-cluster)"--no-cluster'[use existing cluster]'
+"($I --no-bookinfo)"--no-bookinfo'[do not deploy bookinfo]'
+"($I --no-gateway)"--no-gateway'[do not deploy gateway]'
 
         '(- *)'{-h,--help}'[Display help and exit]'
         '1:name'
