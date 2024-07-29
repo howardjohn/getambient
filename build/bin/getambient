@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+function getambient() {
+
+
+print_help() {
+    printf "getambient
+
+Options:\n"
+
+}
+die()
+{
+	test "${_PRINT_HELP:-no}" = yes && print_help >&2
+	echo "$1" >&2
+	return 1
+}
+parse_commandline() {
+	_positionals_count=0
+    _positionals=()
+	while test $# -gt 0
+	do
+		_key="$1"
+		case "$_key" in
+            
+			-h|--help|-h*)
+				print_help
+                return 2
+				;;
+            -*)
+                die "Unknown flag ${_key}"
+                ;;
+			*)
+				_last_positional="$1"
+				_positionals+=("$_last_positional")
+				_positionals_count=$((_positionals_count + 1))
+				;;
+		esac
+		shift
+	done
+	
+	return 0
+}
+
+parse_commandline "$@"
+ret=$?
+if [[ $ret == 2 ]]; then
+    return 0
+fi
+if [[ $ret != 0 ]]; then
+    return $ret
+fi
+set -- $_positionals
+
+
+
+}
+getambient "$@"

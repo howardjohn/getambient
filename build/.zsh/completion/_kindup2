@@ -1,0 +1,27 @@
+#compdef kindup2
+
+_kindup2() {
+    local I="-h --help --version"
+    local ret=1
+    local -a args
+
+    args+=(
+"($I --ip-family)"--ip-family='[networking.ipFamily to use]'
+"($I -n --name)"{-n+,--name=}'[name of the cluster]'
+"($I --cluster-domain)"--cluster-domain='[network.dnsDomain to use]'
+"($I -i --image)"{-i+,--image=}'[node image to use]'
+"($I --compat)"--compat'[disable feature flags]'
+"($I --multi-node)"--multi-node'[enable multiple nodes]'
+"($I --disable-cni)"--disable-cni'[disable builtin cni]'
+"($I --cluster-index)"--cluster-index='[index of cluster, for multiple metallb support]'
+
+        '(- *)'{-h,--help}'[Display help and exit]'
+        '1:name'
+    )
+
+    _arguments -w -s -S $args[@] && ret=0
+
+    return ret
+}
+
+_kindup2

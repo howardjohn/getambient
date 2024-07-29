@@ -1,0 +1,19 @@
+#compdef getambient
+
+_getambient() {
+    local I="-h --help --version"
+    local ret=1
+    local -a args
+
+    args+=(
+
+        '(- *)'{-h,--help}'[Display help and exit]'
+        '1:name'
+    )
+
+    _arguments -w -s -S $args[@] && ret=0
+
+    return ret
+}
+
+_getambient
